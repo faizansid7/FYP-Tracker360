@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 3" id="Layer_3" viewBox="0 0 32 32"><defs><style>.cls-1,.cls-3{fill:none;stroke:#0832ff;stroke-linecap:round;stroke-linejoin:round;}.cls-1{stroke-width:2px;}.cls-2{fill:#0832ff;}</style></defs><title/><polyline class="cls-1" points="15 11 6 11 6 26 26 26 26 11" style="fill: none; stroke: #0832ff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/><rect class="cls-2" height="15" width="2" x="6" y="11" style="fill: #0832ff;"/><line class="cls-3" x1="9.5" x2="9.5" y1="25.5" y2="11.5" style="fill: none; stroke: #0832ff; stroke-linecap: round; stroke-linejoin: round;"/><path class="cls-1" d="M22.46,12.31,19.4,15.36l-3.06-3.06a4.32,4.32,0,0,1,0-6.11h0a4.33,4.33,0,0,1,6.12,0h0A4.32,4.32,0,0,1,22.46,12.31Z" style="fill: none; stroke: #0832ff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/><circle class="cls-3" cx="19.4" cy="9.21" r="2.01" style="fill: none; stroke: #0832ff; stroke-linecap: round; stroke-linejoin: round;"/>
+	<metadata>
+		<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+			<rdf:Description about="https://iconscout.com/legal#licenses" dc:title="2303196,address,destination,direction,gps,location,map,pin" dc:description="2303196,address,destination,direction,gps,location,map,pin" dc:publisher="Iconscout" dc:date="2017-07-08" dc:format="image/svg+xml" dc:language="en">
+				<dc:creator>
+					<rdf:Bag>
+						<rdf:li>Laura Reen</rdf:li>
+					</rdf:Bag>
+				</dc:creator>
+			</rdf:Description>
+		</rdf:RDF>
+    </metadata></svg>
