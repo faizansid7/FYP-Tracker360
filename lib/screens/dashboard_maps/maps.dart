@@ -1,13 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:tracker360/Firebase/database.dart';
+import 'package:tracker360/components/loading.dart';
 import 'package:tracker360/models/driverRegister.dart';
 
 class Maps extends StatefulWidget {
@@ -16,17 +18,27 @@ class Maps extends StatefulWidget {
 }
 
 class _MapsState extends State<Maps> {
+  @override
+  void initState() {
+    super.initState();
+    getPrivilege();
+  }
+
   StreamSubscription _locationSubscription;
   Location _locationTracker = Location();
+  String privilege;
   Marker marker;
   Circle circle;
   GoogleMapController _controller;
+  TextEditingController textEditingController = TextEditingController();
+
   bool typing = false;
-  FocusNode focusNode=FocusNode();
+  FocusNode focusNode = FocusNode();
   static final CameraPosition initialLocation = CameraPosition(
     target: LatLng(24.8607, 67.0011),
     zoom: 14.4746,
   );
+
   Future<Uint8List> getMarker() async {
     ByteData byteData =
         await DefaultAssetBundle.of(context).load("assets/icons/sedan.svg");
@@ -91,88 +103,119 @@ class _MapsState extends State<Maps> {
       _locationSubscription.cancel();
     }
     super.dispose();
+
+    // getUserPrivilege();
   }
 
-  // void initState() {
-  //   super.initState();
-  //   askLocation();
-  // }
+  void getPrivilege() async {
+    var a = await DatabaseService(
+            uid: (await FirebaseAuth.instance.currentUser()).uid)
+        .userDataByProperty("privilege");
+    setState(() {
+      privilege = a;
+    });
+  }
+
+  Future<bool> _onBackPressed() {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Are you sure you want to quit?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () => Navigator.pop(context, false),
+                ),
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () => exit(0),
+                )
+              ],
+            ));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: TextFormField(
-          focusNode: focusNode,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            hintText: ("Enter the driver ID to locate"),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue)),
-            contentPadding:
-                EdgeInsets.only(left: 10, bottom: 30, top: 21, right: 25),
-            suffixIcon: IconButton(
-              icon: Icon(
-                Icons.gps_fixed_outlined,
-              ),
-              onPressed: () async {
-                focusNode.canRequestFocus = false;
-                DatabaseService()
-                    .getDriverLocation("ammar@email.com")
-                    .listen((qs) {
-                  DocumentSnapshot driverDoc = qs.documents.first;
-                  DriverRegister driver =
-                      DriverRegister.fromJson(driverDoc.data);
-                  print("---------");
-                  print("Driver's Latitude: " + driver.lat.toString());
-                  print("Driver's Longitude: " + driver.lng.toString());
-                  setState(() {
-                    //Do the marker working here
-                  });
-                });
-              },
-              // Padding(
-              //   padding: EdgeInsets.all(0.0),
-              //   child: Icon(
-              //     Icons.gps_fixed_outlined,
-              //     color: Colors.grey,
-              //   ),
-              // ),
+    return Form(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        appBar: privilege == 'driver'
+            ? null
+            : AppBar(
+                automaticallyImplyLeading: false,
+                title: TextFormField(
+                  controller: textEditingController,
+                  focusNode: focusNode,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText: ("Enter the driver email to locate"),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue)),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue)),
+                    contentPadding: EdgeInsets.only(
+                        left: 10, bottom: 30, top: 21, right: 25),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.gps_fixed_outlined,
+                      ),
+                      onPressed: () async {
+                        focusNode.canRequestFocus = false;
+                        if (textEditingController.text.trim().isNotEmpty) {
+                          DatabaseService()
+                              .getDriverLocation(
+                                  textEditingController.text.trim())
+                              .listen((qs) {
+                            DocumentSnapshot driverDoc = qs.documents.first;
+                            DriverRegister driver =
+                                DriverRegister.fromJson(driverDoc.data);
+                            print("---------");
+                            print(
+                                "Driver's Latitude: " + driver.lat.toString());
+                            print(
+                                "Driver's Longitude: " + driver.lng.toString());
 
-              // floatingLabelBehavior: FloatingLabelBehavior.always,
-            ),
-          ),
-          // title: typing ? TextFormField() : Text("Enter the driver ID to locate"),
-          // leading: IconButton(
-          //   icon: Icon(typing ? Icons.done : Icons.search),
-          //   onPressed: () {
-          //     setState(() {
-          //       typing = !typing;
-          //     });
-          //   },
-          // ),
+                            setState(() {
+                              marker = Marker(
+                                markerId: MarkerId("loc"),
+                                position: LatLng(driver.lat, driver.lng),
+                                infoWindow:
+                                    InfoWindow(title: "Live Driver Location"),
+                              );
+
+                              _controller.animateCamera(
+                                  CameraUpdate.newLatLngZoom(
+                                      LatLng(driver.lat, driver.lng), 16));
+
+                              // //Do the marker working here.
+                            });
+                          });
+                        } else {
+                          print("masla ha");
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ),
+        body: GoogleMap(
+          mapType: MapType.normal,
+          myLocationEnabled: true,
+          initialCameraPosition: initialLocation,
+          markers: Set.of((marker != null) ? [marker] : []),
+          circles: Set.of((circle != null) ? [circle] : []),
+          onMapCreated: (GoogleMapController controller) {
+            _controller = controller;
+          },
         ),
-      ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        myLocationEnabled: true,
-        initialCameraPosition: initialLocation,
-        markers: Set.of((marker != null) ? [marker] : []),
-        circles: Set.of((circle != null) ? [circle] : []),
-        onMapCreated: (GoogleMapController controller) {
-          _controller = controller;
-        },
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(right: 270.0),
-        child: FloatingActionButton(
-            child: Icon(Icons.location_searching),
-            onPressed: () {
-              getCurrentLocation();
-            }),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(right: 270.0),
+          child: FloatingActionButton(
+              child: Icon(Icons.location_searching),
+              onPressed: () {
+                getCurrentLocation();
+              }),
+        ),
       ),
     );
   }
