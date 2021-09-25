@@ -3,9 +3,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tracker360/constants.dart';
+import 'package:tracker360/models/shipmentFromSender.dart';
 import 'package:tracker360/size_config.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:tracker360/Firebase/database.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
 class TagsBody extends StatefulWidget {
   @override
@@ -27,7 +29,9 @@ class _TagsBodyState extends State<TagsBody> {
 
   @override
   void initState() {
+    getUserID();
     super.initState();
+    // userID = (await FirebaseAuth.instance.currentUser()).uid;
     widget.flutterBlue.connectedDevices
         .asStream()
         .listen((List<BluetoothDevice> devices) {
@@ -72,19 +76,39 @@ class _TagsBodyState extends State<TagsBody> {
     );
   }
 
+  getUserID() async {
+    userID = (await FirebaseAuth.instance.currentUser()).uid;
+    //return userID;
+  }
+
+  tagsList() {
+    iTag.clear();
+    for (BluetoothDevice device in widget.devicesList) {
+      // iTag[] = device.name;
+
+      iTag.addAll([device.name, device.id.toString()]);
+    }
+  }
+
+  var userID;
   final List<String> errors = [];
   List<String> iTag = [];
   final _formKey = GlobalKey<FormState>();
-  List sex = ["Male", "Female"];
   List location = ["Location 1", "Loaction 2"];
   String _locStarting;
   String _locEnding;
   int driverPhone;
   int recieverPhone;
   String description;
-  String gender;
   String driverName;
   String recieverName;
+
+  void _sendSMS(String message, List<String> recipents) async {
+    /* List<String> recipents = [];
+    recipents.clear();
+    recipents.add(recieverPhone.toString());
+    await sendSMS(message: message, recipients: recipents); */
+  }
 
   void addError({String error}) {
     if (!errors.contains(error))
@@ -217,7 +241,7 @@ class _TagsBodyState extends State<TagsBody> {
         backgroundColor: kPrimaryColor,
         onPressed: () async {
           widget.flutterBlue.stopScan();
-
+          tagsList();
           DatabaseService obj = new DatabaseService(
               uid: (await FirebaseAuth.instance.currentUser()).uid);
           var _currentUsername = await obj.userDataByProperty('name');
@@ -423,9 +447,37 @@ class _TagsBodyState extends State<TagsBody> {
                               ),
                               //save button
                               TextButton(
-                                onPressed: null,
+                                onPressed: () async {
+                                  if (_formKey.currentState.validate()) {
+                                    _formKey.currentState.save();
+                                    ShipmentFromSender shipment =
+                                        new ShipmentFromSender(
+                                            currentUsername: _currentUsername,
+                                            locEnding: _locEnding,
+                                            locStarting: _locStarting,
+                                            description: description,
+                                            devicesList: iTag,
+                                            driverName: driverName,
+                                            driverPhone: driverPhone,
+                                            recieverName: recieverName,
+                                            recieverPhone: recieverPhone);
+                                    var a = await DatabaseService(uid: userID)
+                                        .createShipment(shipment);
+                                    // Send ID via SMS functionality
+                                    List<String> recipents = [];
+                                    recipents.clear();
+                                    recipents.add(recieverPhone.toString());
+                                    String message =
+                                        'Your Shipment Details ID is: $a';
+                                    await sendSMS(
+                                        message: message,
+                                        recipients: recipents); //
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                  }
+                                },
                                 child: Text(
-                                  'Save',
+                                  'Save and Send',
                                   style: TextStyle(
                                       color: kPrimaryColor,
                                       fontWeight: FontWeight.bold,

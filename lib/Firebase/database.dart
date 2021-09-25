@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tracker360/models/driverRegister.dart';
 import 'package:tracker360/models/trackerRegister.dart';
+import 'package:tracker360/models/shipmentFromSender.dart';
 
 class DatabaseService {
   final String uid;
@@ -12,9 +13,17 @@ class DatabaseService {
   final CollectionReference tracker =
       Firestore.instance.collection('trackerData');
 
+  final CollectionReference shipment = //shipment from sender
+      Firestore.instance.collection('shipmentData');
+
   Future<void> addDriver(DriverRegister driverData) async {
     await driverCollection.document(uid).setData(driverData.toMap());
     return;
+  }
+
+  Future<dynamic> createShipment(ShipmentFromSender shipmentData) async {
+    DocumentReference result = await shipment.add(shipmentData.toMap());
+    return result.documentID;
   }
 
   Future<void> addTracker(TrackerRegister trackerData) async {
@@ -75,10 +84,11 @@ class DatabaseService {
       return false;
     }
   }
-Stream<QuerySnapshot> getDriverLocation(String email) {
+
+  Stream<QuerySnapshot> getDriverLocation(String email) {
     try {
       Stream<QuerySnapshot> querySnapshots =
-          driverCollection.where("email",isEqualTo:email ).snapshots();
+          driverCollection.where("email", isEqualTo: email).snapshots();
 
       return querySnapshots;
     } catch (e) {
