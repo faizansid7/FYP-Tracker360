@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:tracker360/constants.dart';
 import 'package:tracker360/size_config.dart';
@@ -15,29 +17,50 @@ class _AboutUsState extends State<AboutUs> {
     askLocation();
   }
 
+  Future<bool> _onBackPressed() {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Are you sure you want to quit?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () => Navigator.pop(context, false),
+                ),
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () => exit(0),
+                )
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        shadowColor: kPrimaryColor,
-        elevation: 7,
-        title: Text(
-          'About',
-          style: TextStyle(
-            color: kPrimaryColor,
-            fontWeight: FontWeight.bold,
-            fontSize: getProportionateScreenWidth(30),
+    return Form(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          shadowColor: kPrimaryColor,
+          elevation: 7,
+          title: Text(
+            'About',
+            style: TextStyle(
+              color: kPrimaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: getProportionateScreenWidth(30),
+            ),
           ),
+          leading: Icon(
+            Icons.person_outline_sharp,
+            color: Colors.black54,
+          ),
+          titleSpacing: -3,
         ),
-        leading: Icon(
-          Icons.person_outline_sharp,
-          color: Colors.black54,
-        ),
-        titleSpacing: -3,
+        body: NewWidget(),
       ),
-      body: NewWidget(),
     );
   }
 }
