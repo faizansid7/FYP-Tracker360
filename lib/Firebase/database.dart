@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:tracker360/models/driverRegister.dart';
 import 'package:tracker360/models/trackerRegister.dart';
 import 'package:tracker360/models/shipmentFromSender.dart';
@@ -39,6 +40,13 @@ class DatabaseService {
       return dresult.data;
     } else if (tresult.data != null) {
       return tresult.data;
+    }
+  }
+
+  Future<Map<String, dynamic>> shipmentData(String shipmentID) async {
+    var shipmentresult = await shipment.document(shipmentID).get();
+    if (shipmentresult.data != null) {
+      return shipmentresult.data;
     }
   }
 
