@@ -16,7 +16,7 @@ class Shipment_Recieve extends StatefulWidget {
 class _Shipment_RecieveState extends State<Shipment_Recieve> {
   String driverPhone = "";
   String description = "";
-  String drivername = "";
+  String driveremail = "";
   String recieverName = "";
   String recieverphone = "";
   String senderName = "";
@@ -34,7 +34,7 @@ class _Shipment_RecieveState extends State<Shipment_Recieve> {
         error = "";
         driverPhone = shipment["DriverPhoneNo."].toString();
         description = shipment["Description_Shipment"];
-        drivername = shipment["DriverName"];
+        driveremail = shipment["DriverEmail"];
         recieverName = shipment["RecieverName"];
         recieverphone = shipment["RecieverPhoneNO."].toString();
         senderName = shipment["SenderUserName"];
@@ -47,7 +47,7 @@ class _Shipment_RecieveState extends State<Shipment_Recieve> {
         error = "Wrong shipment ID";
         driverPhone = '';
         description = "";
-        drivername = '';
+        driveremail = '';
         recieverName = '';
         recieverphone = '';
         senderName = '';
@@ -117,8 +117,10 @@ class _Shipment_RecieveState extends State<Shipment_Recieve> {
           body: SingleChildScrollView(
             child: /* Stack( */
                 Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(20),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.all(10),
@@ -149,7 +151,7 @@ class _Shipment_RecieveState extends State<Shipment_Recieve> {
                   SizedBox(
                     height: getProportionateScreenHeight(10),
                   ),
-                  Text("Driver Name: $drivername",
+                  Text("Driver Email: $driveremail",
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: getProportionateScreenHeight(10),
@@ -189,7 +191,9 @@ class _Shipment_RecieveState extends State<Shipment_Recieve> {
                   SizedBox(
                     height: getProportionateScreenHeight(10),
                   ),
-                  Text("Tags List: $tags",
+                  Text("Tags List:",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(tags.toString(),
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: getProportionateScreenHeight(10),
