@@ -40,22 +40,16 @@ class UserProvider extends ChangeNotifier {
   }
 
   _startTimerForUploadingLocation(String uid) async {
- 
-    
     if (driverRegister != null) {
-      if (timer == null) {
-        timer = Timer(Duration(seconds: 15), () async {
-          print("Upload Timer completed");
-          await _determinePosition().then((pos) async {
-            if (pos != null) {
-              await DatabaseService().uploadCurrentLocation(uid,
-                  lat: pos.latitude, long: pos.longitude);
-            }
-          });
+      Timer.periodic(Duration(seconds: 5), (timer) async {
+        print("Upload Timer completed");
+        await _determinePosition().then((pos) async {
+          if (pos != null) {
+            await DatabaseService().uploadCurrentLocation(uid,
+                lat: pos.latitude, long: pos.longitude);
+          }
         });
-      } else {
-        print("Timer is already active. Your location is being uploaded to db");
-      }
+      });
     } else {
       print("Driver data not available in provider");
     }
