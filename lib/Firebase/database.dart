@@ -104,4 +104,14 @@ class DatabaseService {
       return null;
     }
   }
+
+  Future<List> geDrivers() async {
+    List data = [];
+    QuerySnapshot a = await driverCollection.getDocuments();
+    a.documents.forEach((element) {
+      var obj = {element.data["name"], element.data["email"]};
+      data.add(obj);
+    });
+    return data;
+  }
 }

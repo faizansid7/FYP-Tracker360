@@ -6,7 +6,7 @@ class ShipmentFromSender {
   int driverPhone;
   int recieverPhone;
   String description;
-  String driverName;
+  String driverEmail;
   String recieverName;
   List /* <BluetoothDevice> */ devicesList;
   var currentUsername;
@@ -17,7 +17,7 @@ class ShipmentFromSender {
       this.locStarting,
       this.description,
       this.devicesList,
-      this.driverName,
+      this.driverEmail,
       this.driverPhone,
       this.recieverName,
       this.recieverPhone});
@@ -28,7 +28,7 @@ class ShipmentFromSender {
       'ShipmentPickupLoc': locStarting,
       'ShipmentDropOff': locEnding,
       'Description_Shipment': description,
-      'DriverName': driverName,
+      'DriverEmail': driverEmail,
       'DriverPhoneNo.': driverPhone,
       'RecieverName': recieverName,
       'RecieverPhoneNO.': recieverPhone,

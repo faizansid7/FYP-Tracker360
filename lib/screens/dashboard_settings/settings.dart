@@ -391,27 +391,6 @@ class _SettingsState extends State<Settings> {
                             ),
                           ]),
                         ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Theme",
-                          style: TextStyle(
-                              color: kPrimaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                        ),
-                        Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(children: [
-                              SwitchListTile(
-                                value: false,
-                                title: Text("Dark Mode"),
-                                onChanged: (val) {},
-                                activeColor: kPrimaryColor,
-                              )
-                            ])),
                       ]),
                 ))),
           );

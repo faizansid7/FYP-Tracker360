@@ -31,6 +31,7 @@ class _TagsBodyState extends State<TagsBody> {
   void initState() {
     getUserID();
     super.initState();
+    populateDrivers();
     // userID = (await FirebaseAuth.instance.currentUser()).uid;
     widget.flutterBlue.connectedDevices
         .asStream()
@@ -102,6 +103,13 @@ class _TagsBodyState extends State<TagsBody> {
   String description;
   String driverName;
   String recieverName;
+  String driverEmail;
+  List drivers;
+
+  Future<void> populateDrivers() async {
+    drivers = await DatabaseService().geDrivers();
+    // var a = 0;
+  }
 
   void addError({String error}) {
     if (!errors.contains(error))
@@ -148,6 +156,44 @@ class _TagsBodyState extends State<TagsBody> {
               items: location.map((value) {
                 return DropdownMenuItem<String>(
                     value: value, child: Text(value));
+              }).toList(),
+            )));
+      },
+    );
+  }
+
+  FormField driverField() {
+    return FormField<String>(
+      validator: (value) {
+        if (driverEmail == null) {
+          addError(error: "Add driver");
+          return "";
+        }
+        return null;
+      },
+      builder: (FormFieldState<String> state) {
+        return InputDecorator(
+            decoration: InputDecoration(
+              labelText: "Driver",
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
+              // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/address.svg"),
+            ),
+            child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+              value: driverEmail,
+              hint: Text("Select Driver"),
+              isDense: true,
+              onChanged: (newValue) {
+                removeError(error: "Add driver");
+                setState(() {
+                  driverEmail = newValue;
+
+                  state.didChange(newValue);
+                });
+              },
+              items: drivers.map((value) {
+                return DropdownMenuItem<String>(
+                    value: value.last, child: Text(value.first));
               }).toList(),
             )));
       },
@@ -312,34 +358,13 @@ class _TagsBodyState extends State<TagsBody> {
                               ),
                               // driver identification
                               Text(
-                                'Driver Name*',
+                                'Driver*',
                                 style: TextStyle(color: kPrimaryColor),
                               ),
                               SizedBox(
                                 height: getProportionateScreenHeight(10),
                               ),
-                              TextFormField(
-                                  keyboardType: TextInputType.name,
-                                  onSaved: (newValue) => driverName = newValue,
-                                  onChanged: (value) {
-                                    if (value.isNotEmpty) {
-                                      removeError(
-                                          error: kDriverNameError_Tagsbody);
-                                    }
-                                    return null;
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      addError(
-                                          error: kDriverNameError_Tagsbody);
-
-                                      return "";
-                                    }
-                                    return null;
-                                  },
-                                  decoration:
-                                      InputDecoration(labelText: 'Name')),
-
+                              driverField(),
                               SizedBox(
                                 height: getProportionateScreenHeight(10),
                               ),
@@ -450,7 +475,7 @@ class _TagsBodyState extends State<TagsBody> {
                                             locStarting: _locStarting,
                                             description: description,
                                             devicesList: iTag,
-                                            driverName: driverName,
+                                            driverEmail: driverEmail,
                                             driverPhone: driverPhone,
                                             recieverName: recieverName,
                                             recieverPhone: recieverPhone);
