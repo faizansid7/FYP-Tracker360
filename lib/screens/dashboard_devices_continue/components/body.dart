@@ -103,13 +103,6 @@ class _TagsBodyState extends State<TagsBody> {
   String driverName;
   String recieverName;
 
-  void _sendSMS(String message, List<String> recipents) async {
-    /* List<String> recipents = [];
-    recipents.clear();
-    recipents.add(recieverPhone.toString());
-    await sendSMS(message: message, recipients: recipents); */
-  }
-
   void addError({String error}) {
     if (!errors.contains(error))
       setState(() {

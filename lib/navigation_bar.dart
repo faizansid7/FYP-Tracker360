@@ -5,6 +5,7 @@ import 'package:tracker360/constants.dart';
 import 'package:tracker360/screens/dashboard_devices_continue/components/body.dart';
 import 'package:tracker360/screens/dashboard_about_us/about_us.dart';
 import 'package:tracker360/screens/dashboard_maps/maps.dart';
+import 'package:tracker360/screens/dashboard_reciever/shipment_recieve.dart';
 import 'package:tracker360/screens/dashboard_settings/settings.dart';
 
 import 'Firebase/database.dart';
@@ -34,6 +35,7 @@ class _MyBottomNavigationbarState extends State<MyBottomNavigationbar> {
   final List<Widget> _trackerChildren = [
     TagsBody(),
     Maps(),
+    Shipment_Recieve(),
     AboutUs(),
     Settings(),
   ];
@@ -74,14 +76,19 @@ class _MyBottomNavigationbarState extends State<MyBottomNavigationbar> {
         color: getColor(1),
       ),
       Icon(
+        Icons.wifi_tethering_rounded,
+        size: 30,
+        color: getColor(2),
+      ),
+      Icon(
         Icons.description_sharp,
         size: 30,
-        color: (_currentindex == 2) ? kPrimaryColor : Colors.black54,
+        color: (_currentindex == 3) ? kPrimaryColor : Colors.black54,
       ),
       Icon(
         Icons.person,
         size: 30,
-        color: (_currentindex == 3) ? kPrimaryColor : Colors.black54,
+        color: (_currentindex == 4) ? kPrimaryColor : Colors.black54,
       ),
     ];
 
