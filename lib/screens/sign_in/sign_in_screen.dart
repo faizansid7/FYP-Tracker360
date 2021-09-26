@@ -82,7 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: [
                         SizedBox(height: SizeConfig.screenHeight * 0.04),
                         Text(
-                          "Welcome Back",
+                          "Welcome",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: getProportionateScreenWidth(28),
@@ -106,44 +106,44 @@ class _SignInScreenState extends State<SignInScreen> {
                               buildPasswordFormField(),
                               SizedBox(
                                   height: getProportionateScreenHeight(30)),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        getProportionateScreenWidth(02)),
-                                child: Row(
-                                  children: [
-                                    Checkbox(
-                                      value: remember,
-                                      activeColor: kPrimaryColor,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          remember = value;
-                                        });
-                                      },
-                                    ),
-                                    Text(
-                                      "Remember Me",
-                                      style: TextStyle(
-                                          fontSize:
-                                              getProportionateScreenHeight(13)),
-                                    ),
-                                    Spacer(),
-                                    GestureDetector(
-                                      onTap: () => Navigator.pushNamed(context,
-                                          ForgotPasswordScreen.routeName),
-                                      child: Text(
-                                        "Forgot Password",
-                                        style: TextStyle(
-                                            decoration:
-                                                TextDecoration.underline,
-                                            fontSize:
-                                                getProportionateScreenHeight(
-                                                    13)),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.symmetric(
+                              //       horizontal:
+                              //           getProportionateScreenWidth(02)),
+                              //   child: Row(
+                              //     children: [
+                              //       Checkbox(
+                              //         value: remember,
+                              //         activeColor: kPrimaryColor,
+                              //         onChanged: (value) {
+                              //           setState(() {
+                              //             remember = value;
+                              //           });
+                              //         },
+                              //       ),
+                              //       Text(
+                              //         "Remember Me",
+                              //         style: TextStyle(
+                              //             fontSize:
+                              //                 getProportionateScreenHeight(13)),
+                              //       ),
+                              //       Spacer(),
+                              //       GestureDetector(
+                              //         onTap: () => Navigator.pushNamed(context,
+                              //             ForgotPasswordScreen.routeName),
+                              //         child: Text(
+                              //           "Forgot Password",
+                              //           style: TextStyle(
+                              //               decoration:
+                              //                   TextDecoration.underline,
+                              //               fontSize:
+                              //                   getProportionateScreenHeight(
+                              //                       13)),
+                              //         ),
+                              //       )
+                              //     ],
+                              //   ),
+                              // ),
                               FormError(errors: errors),
                               SizedBox(
                                 height: getProportionateScreenHeight(20),
