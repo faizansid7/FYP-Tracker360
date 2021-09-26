@@ -14,14 +14,14 @@ class Shipment_Recieve extends StatefulWidget {
 
 // ignore: camel_case_types
 class _Shipment_RecieveState extends State<Shipment_Recieve> {
-  String driverPhone;
-  String description;
-  String drivername;
-  String recieverName;
-  String recieverphone;
-  String senderName;
-  String dropOff;
-  String pickUp;
+  String driverPhone = "";
+  String description = "";
+  String drivername = "";
+  String recieverName = "";
+  String recieverphone = "";
+  String senderName = "";
+  String dropOff = "";
+  String pickUp = "";
   List tags = [];
   String error = "";
 
