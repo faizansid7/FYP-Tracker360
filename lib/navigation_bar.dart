@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -135,20 +137,41 @@ class _MyBottomNavigationbarState extends State<MyBottomNavigationbar> {
     });
   }
 
+  Future<bool> _onBackPressed() {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Are you sure you want to quit?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () => Navigator.pop(context, false),
+                ),
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () => exit(0),
+                )
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return privilege == null
         ? Loading()
-        : Scaffold(
-            body: _children[_currentindex],
-            bottomNavigationBar: GestureDetector(
-              child: CurvedNavigationBar(
-                onTap: onTappedBar,
-                height: 50,
-                index: _currentindex,
-                items: getIconList(),
-                /*  selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white, */
+        : Form(
+            onWillPop: _onBackPressed,
+            child: Scaffold(
+              body: _children[_currentindex],
+              bottomNavigationBar: GestureDetector(
+                child: CurvedNavigationBar(
+                  onTap: onTappedBar,
+                  height: 50,
+                  index: _currentindex,
+                  items: getIconList(),
+                  /*  selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white, */
+                ),
               ),
             ),
           );
