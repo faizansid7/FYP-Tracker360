@@ -17,7 +17,7 @@
         android:label="tracker360"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name= "com.google.android.geo.API_KEY"
-        android:value= "AIzaSyA3C4EVsaAwDNwhMNiSTDL1e_760ZtKvrw"/>
+        android:value= ""/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
